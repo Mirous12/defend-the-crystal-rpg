@@ -45,7 +45,7 @@ public class CrystalAnimation : MonoBehaviour
                 yAxesTransform = -yAxesTransform;
             }
 
-            transform.position = new Vector2(transform.position.x, transform.position.y + yAxesTransform);
+            transform.position = new Vector3(transform.position.x, transform.position.y + yAxesTransform, 90);
 
             currentDif = Mathf.Abs( normalYPos - transform.position.y );
         }
