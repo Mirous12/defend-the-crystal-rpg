@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf6bb61844e148f48b72e1885fecd2ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxHealth: 0
 --- !u!1 &188699044 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100020, guid: 4bd025fbe3c94be43946d59e7ae40d3c,
@@ -491,7 +492,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4371870986239906, guid: c965267ff02311e47b35d0e03c7fbbd0, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -3.815723
+      value: -3.76
       objectReference: {fileID: 0}
     - target: {fileID: 4371870986239906, guid: c965267ff02311e47b35d0e03c7fbbd0, type: 2}
       propertyPath: m_LocalPosition.z
@@ -520,7 +521,7 @@ Prefab:
     - target: {fileID: 50995739077913620, guid: c965267ff02311e47b35d0e03c7fbbd0,
         type: 2}
       propertyPath: m_Constraints
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 50995739077913620, guid: c965267ff02311e47b35d0e03c7fbbd0,
         type: 2}
@@ -584,6 +585,21 @@ Prefab:
       propertyPath: Crystal
       value: 
       objectReference: {fileID: 446368659}
+    - target: {fileID: 95625508270660336, guid: c965267ff02311e47b35d0e03c7fbbd0,
+        type: 2}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 70754264109869720, guid: c965267ff02311e47b35d0e03c7fbbd0,
+        type: 2}
+      propertyPath: m_Offset.x
+      value: 0.024240196
+      objectReference: {fileID: 0}
+    - target: {fileID: 70754264109869720, guid: c965267ff02311e47b35d0e03c7fbbd0,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 0.51837766
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c965267ff02311e47b35d0e03c7fbbd0, type: 2}
   m_IsPrefabAsset: 0
@@ -705,6 +721,7 @@ GameObject:
   - component: {fileID: 1261317038}
   - component: {fileID: 1261317037}
   - component: {fileID: 1261317036}
+  - component: {fileID: 1261317039}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -772,6 +789,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1261317039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1261317035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5f943b62b4be343a76adb654ae3ddf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1427739500
 Prefab:
   m_ObjectHideFlags: 0
