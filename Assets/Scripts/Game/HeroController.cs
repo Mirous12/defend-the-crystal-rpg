@@ -18,7 +18,7 @@ public class HeroController : MonoBehaviour
     private bool _jumping;
     private bool Jumping
     {
-        get => _jumping;
+        get { return _jumping; }
 
         set
         {
