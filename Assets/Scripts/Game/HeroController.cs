@@ -14,6 +14,7 @@ public class HeroController : MonoBehaviour
     public float Speed = 2.0f;
     [Range(6.0f, 16.0f)]
     public float JumpStrength = 7.0f;
+    public GameObject Crystal;
 
     private bool _jumping;
     private bool Jumping
@@ -36,55 +37,76 @@ public class HeroController : MonoBehaviour
         currentLook = LookDirector.Left;
 
         Jumping = false;
+
+        if (Crystal != null)
+        {
+            var CrystalClass = Crystal.GetComponent<Crystal>();
+
+            if (CrystalClass != null)
+            {
+                CrystalClass.CrystalDestroyed += OnCrystalDestroyed;
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        float currentAxes = Input.GetAxis( "Horizontal" );
-
-        if( currentAxes == 0f )
+        if (!currentAnimator.GetBool("IsDead"))
         {
-            currentAnimator.SetBool( "IsWalking", false );
-        }
-        else
-        {
-            currentAnimator.SetBool( "IsWalking", true );
-        }
+            float currentAxes = Input.GetAxis("Horizontal");
 
-        if( Jumping )
-        {
-            currentAnimator.SetBool( "IsWalking", false );
-        }
+            if (currentAxes == 0f)
+            {
+                currentAnimator.SetBool("IsWalking", false);
+            }
+            else
+            {
+                currentAnimator.SetBool("IsWalking", true);
+            }
 
-        Vector3 positionToSet = new Vector3();
+            if (Jumping)
+            {
+                currentAnimator.SetBool("IsWalking", false);
+            }
 
-        positionToSet.x = ( Speed * currentAxes ) * Time.fixedDeltaTime;
+            Vector3 positionToSet = new Vector3();
 
-        transform.position = transform.position + positionToSet;
+            positionToSet.x = (Speed * currentAxes) * Time.fixedDeltaTime;
 
-        LookDirector newLook = LookDirector.Left;
+            transform.position = transform.position + positionToSet;
 
-        if( positionToSet.x > 0 )
-        {
-            newLook = LookDirector.Right;
-        }
+            LookDirector newLook = LookDirector.Left;
 
-        if( currentLook != newLook && !currentAnimator.GetBool( "Attack" ) )
-        {
-            Vector3 scaleFactor = new Vector3( -transform.localScale.x, 1, 1 );
-            transform.localScale = scaleFactor;
+            if (positionToSet.x > 0)
+            {
+                newLook = LookDirector.Right;
+            }
+            else if (positionToSet.x < 0)
+            {
+                newLook = LookDirector.Left;
+            }
+            else
+            {
+                newLook = currentLook;
+            }
 
-            currentLook = newLook;
-        }
+            if (currentLook != newLook && !currentAnimator.GetBool("Attack"))
+            {
+                Vector3 scaleFactor = new Vector3(-transform.localScale.x, 1, 1);
+                transform.localScale = scaleFactor;
 
-        //Jump
-        if( Input.GetKey( KeyCode.Space ) && !Jumping )
-        {
-            Jumping = true;
+                currentLook = newLook;
+            }
 
-            var rigidbody = GetComponent<Rigidbody2D>();
+            //Jump
+            if (Input.GetKey(KeyCode.Space) && !Jumping)
+            {
+                Jumping = true;
 
-            rigidbody.AddRelativeForce( new Vector2( 1, JumpStrength ), ForceMode2D.Impulse );
+                var rigidbody = GetComponent<Rigidbody2D>();
+
+                rigidbody.AddRelativeForce(new Vector2(1, JumpStrength), ForceMode2D.Impulse);
+            }
         }
     }
 
@@ -94,5 +116,10 @@ public class HeroController : MonoBehaviour
         {
             Jumping = false;
         }
+    }
+
+    void OnCrystalDestroyed()
+    {
+        currentAnimator.SetBool("IsDead", true);
     }
 }

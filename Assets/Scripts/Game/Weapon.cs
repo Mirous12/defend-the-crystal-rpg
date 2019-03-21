@@ -10,7 +10,7 @@ public class Weapon : MonoBehaviour
 
         if( enemy != null )
         {
-            
+            Debug.Log("KEK");
         }
     }
 }
