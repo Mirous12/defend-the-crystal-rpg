@@ -6,6 +6,8 @@ public interface IEnemyListener
 {
     Enemy.OnSingleEnemyDied GetSingleEnemyDiedDelegate();
     Enemy.OnEnemyHitted GetEnemyHittedDelegate();
+    Enemy.OnEnemyAttacked GetEnemyAttackedDelegate();
+    Enemy.OnEnemyAttacked GetEnemyStopAttackingDelegate();
 }
 
 public class Enemy : MonoBehaviour
@@ -18,26 +20,41 @@ public class Enemy : MonoBehaviour
     public enum EventType
     {
         EnemyDied = 1,
-        EnemyHitted
+        EnemyHitted,
+        EnemyAttacked,
+        EnemyStopAttacking
     }
 
-    public int MaxHealth;
-
-    public delegate void OnSingleEnemyDied(GameObject enemy);
+    /* Events */
     public event OnSingleEnemyDied SingleEnemyDied;
-
-    public delegate void OnEnemyHitted(GameObject hitObject, Enemy enemy, int damage);
     public event OnEnemyHitted EnemyHitted;
+    public event OnEnemyAttacked EnemyAttacked;
+    public event OnEnemyAttacked EnemyStopedAttacking;
 
-    private EnemySpawnPoint spawnPoint = EnemySpawnPoint.Left;
+    /* Delegates */
+    public delegate void OnSingleEnemyDied( GameObject enemy );
+    public delegate void OnEnemyHitted( GameObject hitObject, Enemy enemy, int damage );
+    public delegate void OnEnemyAttacked( GameObject enemy, int enemyDamage );
+
+    /* Private */
+    private readonly int maxHealth = 5;
+
+    /* Properties variables */
+    private EnemySpawnPoint _spawnPoint = EnemySpawnPoint.Left;
+    private int _currentHealth;
+    private int _damage = 1;
+
+    /* Properties */
+    public int Damage
+    {
+        get { return _damage; }
+        set { _damage = ( value > 0 ) ? value : 0; }
+    }
     public EnemySpawnPoint SpawnPoint
     {
-        private set { spawnPoint = value; }
-
-        get { return spawnPoint; }
+        private set { _spawnPoint = value; }
+        get { return _spawnPoint; }
     }
-
-    private int _currentHealth;
     public int CurrentHealth
     {
         get { return _currentHealth; }
@@ -50,9 +67,12 @@ public class Enemy : MonoBehaviour
             {
                 _currentHealth = 0;
                 SingleEnemyDied(gameObject);
+                Kill();
             }
         }
     }
+
+    //===========================================
 
     void Start()
     {
@@ -73,7 +93,7 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        CurrentHealth = MaxHealth;
+        CurrentHealth = maxHealth;
     }
 
     private void Kill()
@@ -81,42 +101,70 @@ public class Enemy : MonoBehaviour
 
     }
 
-    public void SendDamage(int damage, GameObject damageRefer = null)
+    private void AttackStart()
     {
-        if (CurrentHealth > 0)
+        EnemyAttacked( gameObject, Damage );
+    }
+
+    private void AttackEnd()
+    {
+        EnemyStopedAttacking( gameObject, Damage );
+    }
+
+    public void SendDamage( int damage, GameObject damageRefer = null )
+    {
+        if( CurrentHealth > 0 )
         {
             CurrentHealth -= damage;
-            EnemyHitted(damageRefer, this, damage);
+            EnemyHitted( damageRefer, this, damage );
         }
     }
 
-    public void SubscribeToEvent(EventType eventType, IEnemyListener listener)
+    public void SubscribeToEvent( EventType eventType, IEnemyListener listener )
     {
-        switch(eventType)
+        switch( eventType )
         {
             case EventType.EnemyDied:
-                if (listener.GetSingleEnemyDiedDelegate() != null)
+                if( listener.GetSingleEnemyDiedDelegate() != null )
                 {
                     SingleEnemyDied += listener.GetSingleEnemyDiedDelegate();
                 }
                 break;
             case EventType.EnemyHitted:
-                if (listener.GetEnemyHittedDelegate() != null)
+                if( listener.GetEnemyHittedDelegate() != null )
                 {
                     EnemyHitted += listener.GetEnemyHittedDelegate();
                 }
                 break;
+            case EventType.EnemyAttacked:
+                if (listener.GetEnemyAttackedDelegate() != null)
+                {
+                    EnemyAttacked += listener.GetEnemyAttackedDelegate();
+                }
+                break;
+            case EventType.EnemyStopAttacking:
+                if( listener.GetEnemyStopAttackingDelegate() != null )
+                {
+                    EnemyStopedAttacking += listener.GetEnemyStopAttackingDelegate();
+                }
+                break;
         }
     }
-    public void UnsubscribeFromEvent(EventType eventType, IEnemyListener listener)
+    public void UnsubscribeFromEvent( EventType eventType, IEnemyListener listener )
     {
-        switch (eventType)
+        switch( eventType )
         {
             case EventType.EnemyDied:
                 SingleEnemyDied -= listener.GetSingleEnemyDiedDelegate();
                 break;
             case EventType.EnemyHitted:
                 EnemyHitted -= listener.GetEnemyHittedDelegate();
+                break;
+            case EventType.EnemyAttacked:
+                EnemyAttacked -= listener.GetEnemyAttackedDelegate();
+                break;
+            case EventType.EnemyStopAttacking:
+                EnemyStopedAttacking -= listener.GetEnemyStopAttackingDelegate();
                 break;
         }
     }
