@@ -9,7 +9,7 @@ public class EnemyController : MonoBehaviour, IEnemyListener
     public float MaxDyingAnimationTime = 2.5f;
 
     /* Delegates */
-    public delegate void OnEnemyDiedAnimationFinished(Enemy enemy);
+    public delegate void OnEnemyDiedAnimationFinished( Enemy enemy );
 
     /* Events */
     public event OnEnemyDiedAnimationFinished EnemyDyingAnimationFinished;
@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour, IEnemyListener
     private GameObject crystalObject;
     private Enemy enemy;
     private float timeOnAnimationDelay = 0f;
+    private GameObject weapon;
 
     /* State Fields */
     private bool isMovingEnabled = true;
@@ -39,10 +40,10 @@ public class EnemyController : MonoBehaviour, IEnemyListener
     }
     public bool IsMoving
     {
-        private set 
-        { 
+        private set
+        {
             isMoving = value;
-            animator.SetBool("IsWalking", value);
+            animator.SetBool( "IsWalking", value );
         }
         get { return isMoving; }
     }
@@ -75,6 +76,23 @@ public class EnemyController : MonoBehaviour, IEnemyListener
             enemy.SubscribeToEvent( Enemy.EventType.EnemyDied, this );
             enemy.SubscribeToEvent( Enemy.EventType.EnemyAttacked, this );
             enemy.SubscribeToEvent( Enemy.EventType.EnemyStopAttacking, this );
+        }
+
+        Transform body = transform.Find( "orc_body" );
+
+        if( body )
+        {
+            Transform arm = body.Find( "orc _R_arm" );
+
+            if( arm )
+            {
+                Transform hand = arm.Find( "orc _R_hand" );
+
+                if( hand )
+                {
+                    weapon = hand.Find( "Enemy Weapon" ).gameObject;
+                }
+            }
         }
     }
 
@@ -111,6 +129,15 @@ public class EnemyController : MonoBehaviour, IEnemyListener
                 {
                     transform.position = transform.position + positionToSet;
                 }
+
+                if ( enemy.SpawnPoint == Enemy.EnemySpawnPoint.Right )
+                {
+                    transform.localScale = new Vector3( -0.5f, 0.5f, 1f );
+                }
+                else
+                {
+                    transform.localScale = new Vector3( 0.5f, 0.5f, 1f );
+                }
             }
             else
             {
@@ -137,19 +164,19 @@ public class EnemyController : MonoBehaviour, IEnemyListener
         }
     }
 
-    private void SetEnemyOpacity(float percent)
+    private void SetEnemyOpacity( float percent )
     {
-        List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>(transform.GetComponentsInChildren<SpriteRenderer>());
+        List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>( transform.GetComponentsInChildren<SpriteRenderer>() );
 
-        foreach (var item in spriteRenderers)
+        foreach( var item in spriteRenderers )
         {
-            if (item != null && percent >= 0 && percent <= 1)
+            if( item != null && percent >= 0 && percent <= 1 )
             {
-                item.color = new Color(1f, 1f, 1f, percent);
+                item.color = new Color( 1f, 1f, 1f, percent );
 
-                if (percent == 0)
+                if( percent == 0 )
                 {
-                    EnemyDyingAnimationFinished(this.enemy);
+                    EnemyDyingAnimationFinished( this.enemy );
                     isDeadAnimationOngoing = false;
                 }
             }
@@ -180,9 +207,9 @@ public class EnemyController : MonoBehaviour, IEnemyListener
         }
     }
 
-    private void OnEnemyDead(GameObject enemy)
+    private void OnEnemyDead( GameObject enemy )
     {
-        if (enemy == this.enemy.gameObject)
+        if( enemy == this.enemy.gameObject )
         {
             isDead = true;
             isDeadAnimationOngoing = true;
@@ -192,8 +219,6 @@ public class EnemyController : MonoBehaviour, IEnemyListener
 
     private void OnEnemyAttacked( GameObject enemy, int enemyDamage )
     {
-        Transform weapon = enemy.transform.Find( "Enemy Weapon" );
-
         if( weapon != null )
         {
             PolygonCollider2D collider = weapon.GetComponent<PolygonCollider2D>();
@@ -201,38 +226,34 @@ public class EnemyController : MonoBehaviour, IEnemyListener
             if( collider != null )
             {
                 collider.enabled = true;
+                Debug.Log( "Attack began" );
             }
         }
-
-        Debug.Log( "Attack began" );
     }
 
     private void OnEnemyAttackStoped( GameObject enemy, int enemyDamage )
     {
-        Transform weapon = enemy.transform.Find( "Enemy Weapon" );
-
         if( weapon != null )
         {
             PolygonCollider2D collider = weapon.GetComponent<PolygonCollider2D>();
 
-            if (collider != null)
+            if( collider != null )
             {
                 collider.enabled = false;
+                Debug.Log( "Attack Ended" );
             }
         }
-
-        Debug.Log( "Attack Ended" );
     }
 
-    IEnumerator MovingEnableCoroutine(float timeDelay)
+    IEnumerator MovingEnableCoroutine( float timeDelay )
     {
-        yield return new WaitForSeconds(timeDelay);
+        yield return new WaitForSeconds( timeDelay );
         isMovingEnabled = true;
     }
 
     /* Enemy Listener */
-    public Enemy.OnSingleEnemyDied GetSingleEnemyDiedDelegate()  => OnEnemyDead;
-    public Enemy.OnEnemyHitted GetEnemyHittedDelegate()          => OnEnemyHitted;
-    public Enemy.OnEnemyAttacked GetEnemyAttackedDelegate()      => OnEnemyAttacked;
+    public Enemy.OnSingleEnemyDied GetSingleEnemyDiedDelegate() => OnEnemyDead;
+    public Enemy.OnEnemyHitted GetEnemyHittedDelegate() => OnEnemyHitted;
+    public Enemy.OnEnemyAttacked GetEnemyAttackedDelegate() => OnEnemyAttacked;
     public Enemy.OnEnemyAttacked GetEnemyStopAttackingDelegate() => OnEnemyAttackStoped;
 }

@@ -15,7 +15,8 @@ public class Enemy : MonoBehaviour
     public enum EnemySpawnPoint
     {
         Left = 1,
-        Right
+        Right,
+        Undefined
     }
     public enum EventType
     {
@@ -40,7 +41,7 @@ public class Enemy : MonoBehaviour
     private readonly int maxHealth = 5;
 
     /* Properties variables */
-    private EnemySpawnPoint _spawnPoint = EnemySpawnPoint.Left;
+    private EnemySpawnPoint _spawnPoint = EnemySpawnPoint.Undefined;
     private int _currentHealth;
     private int _damage = 1;
 
@@ -52,7 +53,7 @@ public class Enemy : MonoBehaviour
     }
     public EnemySpawnPoint SpawnPoint
     {
-        private set { _spawnPoint = value; }
+        set { _spawnPoint = value; }
         get { return _spawnPoint; }
     }
     public int CurrentHealth
@@ -63,10 +64,10 @@ public class Enemy : MonoBehaviour
         {
             _currentHealth = value;
 
-            if (_currentHealth <= 0)
+            if( _currentHealth <= 0 )
             {
                 _currentHealth = 0;
-                SingleEnemyDied(gameObject);
+                SingleEnemyDied( gameObject );
                 Kill();
             }
         }
@@ -76,21 +77,9 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        var camera = GameObject.Find("Main Camera");
-
-        if (camera != null)
+        if( SpawnPoint == EnemySpawnPoint.Undefined )
         {
-            GameManagerInstantiator gmInit = camera.GetComponent<GameManagerInstantiator>();
-
-            if (gmInit != null)
-            {
-                EnemyManager enemyManager = gmInit.GetEnemyManager();
-
-                if (enemyManager != null)
-                {
-                    enemyManager.SubscribeToNewEnemy(this);
-                }
-            }
+            SpawnPoint = EnemySpawnPoint.Left;
         }
 
         CurrentHealth = maxHealth;
@@ -98,7 +87,7 @@ public class Enemy : MonoBehaviour
 
     private void Kill()
     {
-
+        Destroy( gameObject, 3.5f );
     }
 
     private void AttackStart()
@@ -137,7 +126,7 @@ public class Enemy : MonoBehaviour
                 }
                 break;
             case EventType.EnemyAttacked:
-                if (listener.GetEnemyAttackedDelegate() != null)
+                if( listener.GetEnemyAttackedDelegate() != null )
                 {
                     EnemyAttacked += listener.GetEnemyAttackedDelegate();
                 }
