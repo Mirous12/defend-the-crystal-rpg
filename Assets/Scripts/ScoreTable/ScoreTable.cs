@@ -7,7 +7,22 @@ public class SaveComparator : IComparer<SaveProfiler>
 {
     public int Compare( SaveProfiler x, SaveProfiler y )
     {
-        return x.monstersKilled = y.monstersKilled;
+        int result = 0;
+
+        if (x.monstersKilled > y.monstersKilled)
+        {
+            result = -1;
+        }
+        else if (x.monstersKilled == y.monstersKilled)
+        {
+            result = 0;
+        }
+        else
+        {
+            result = 1;
+        }
+
+        return result;
     }
 }
 
