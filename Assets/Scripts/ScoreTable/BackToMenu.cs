@@ -2,13 +2,10 @@
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class BackToMenu : MonoBehaviour, IPointerClickHandler
+public class BackToMenu : MonoBehaviour
 {
-    public void OnPointerClick( PointerEventData eventData )
+    public void ClickMenu()
     {
-        if( eventData.pointerCurrentRaycast.gameObject.name == gameObject.name )
-        {
-            SceneManager.LoadScene( "SampleScene" );
-        }
+        SceneManager.LoadScene( "SampleScene" );
     }
 }

@@ -17,13 +17,15 @@ public class ScoreTable : MonoBehaviour
     public Text[] DateFields;
     public GameObject AndMoreComponent;
 
-    private List<SaveProfiler> profilers;
+    private List<SaveProfiler> profilers = new List<SaveProfiler>();
 
     void Start()
     {
         if( File.Exists( "save.data" ) )
         {
             List<string> dataInfo = new List<string>( File.ReadAllLines( "save.data" ) );
+
+            Debug.Log( "String count: " + dataInfo.Count );
 
             if( dataInfo.Count < 5 )
             {
@@ -57,7 +59,7 @@ public class ScoreTable : MonoBehaviour
 
                     scoreText.text = "" + currentProfile.monstersKilled + " monsters killed";
 
-                    string date = currentProfile.date + " " + currentProfile.time + " ";
+                    dateText.text = currentProfile.date + " " + currentProfile.time + " ";
                 }
             }
         }

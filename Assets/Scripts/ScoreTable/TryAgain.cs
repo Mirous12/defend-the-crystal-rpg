@@ -2,13 +2,10 @@
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class TryAgain : MonoBehaviour, IPointerClickHandler
+public class TryAgain : MonoBehaviour
 {
-    public void OnPointerClick( PointerEventData eventData )
+    public void ClickGame()
     {
-        if( eventData.pointerCurrentRaycast.gameObject.name == gameObject.name )
-        {
-            SceneManager.LoadScene( "GameScene" );
-        }
+        SceneManager.LoadScene( "GameScene" );
     }
 }
