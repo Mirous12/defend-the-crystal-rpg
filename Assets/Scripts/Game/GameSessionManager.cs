@@ -24,6 +24,22 @@ class GameSessionManager : MonoBehaviour
 
     private void OnCrystalDestroyed()
     {
+        GameObject crystal = GameObject.Find( "Crystal" );
+
+        if (crystal)
+        {
+            WaveGenerator waveGen = crystal.GetComponent<WaveGenerator>();
+
+            if (waveGen)
+            {
+                int currentScore = waveGen.CurrentScore;
+
+                SaveProgress saver = new SaveProgress();
+
+                saver.SaveInfo( currentScore );
+            }
+        }
+
         StartCoroutine( DelayEndGame() );
     }
 

@@ -18,8 +18,6 @@ public class EnemyWeapon : MonoBehaviour
 
     private void OnTriggerEnter2D( Collider2D collision )
     {
-        Debug.Log( "Collisison" );
-
         Crystal crystal = collision.gameObject.GetComponent<Crystal>();
 
         if( crystal )

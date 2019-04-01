@@ -39,9 +39,7 @@ public class Crystal : MonoBehaviour
 
     public void DamageCrystal(int damage)
     {
-        Debug.Log( "Got damage" );
-
-        if (damage > 0)
+        if (damage > 0 && CurrentHealth > 0)
         {
             CurrentHealth -= damage;
         }

@@ -226,7 +226,6 @@ public class EnemyController : MonoBehaviour, IEnemyListener
             if( collider != null )
             {
                 collider.enabled = true;
-                Debug.Log( "Attack began" );
             }
         }
     }
@@ -240,7 +239,6 @@ public class EnemyController : MonoBehaviour, IEnemyListener
             if( collider != null )
             {
                 collider.enabled = false;
-                Debug.Log( "Attack Ended" );
             }
         }
     }
