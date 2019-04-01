@@ -47,6 +47,6 @@ class GameSessionManager : MonoBehaviour
     {
         yield return new WaitForSeconds( WaitSecondsAfterLose );
 
-        SceneManager.LoadScene( "SampleScene" );
+        SceneManager.LoadScene( "ScoreTable" );
     }
 }

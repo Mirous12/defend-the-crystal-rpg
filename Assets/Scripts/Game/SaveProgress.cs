@@ -22,8 +22,12 @@ public class SaveProfiler
     public void InitFromString(string saveString)
     {
         time = saveString.Substring( 0, 5 );
+        Debug.Log( time );
         date = saveString.Substring( 6, 5 );
-        monstersKilled = System.Convert.ToInt32( saveString.Substring( 13, saveString.Length - 13 ) );
+        Debug.Log( date );
+        Debug.Log( "Length: " + ( saveString.Length - 13 ) );
+        Debug.Log( saveString );
+        monstersKilled = System.Convert.ToInt32( saveString.Substring( 12, saveString.Length - 13 ) );
     }
 }
 
